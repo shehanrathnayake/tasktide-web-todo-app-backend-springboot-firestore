@@ -6,14 +6,20 @@ import com.google.firebase.FirebaseOptions;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
-import java.io.InputStream;
+
 @Service
 public class FirebaseService {
     @PostConstruct
     public void initialize() {
         try {
-            InputStream serviceAccount = new FileInputStream("serviceAccount.json");
-            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+//            InputStream serviceAccount = new FileInputStream("service-account.json");
+//            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+//            FirebaseOptions options = new FirebaseOptions.Builder()
+//                    .setCredentials(credentials)
+//                    .build();
+//            FirebaseApp.initializeApp(options);
+
+            GoogleCredentials credentials = GoogleCredentials.fromStream(getClass().getClassLoader().getResourceAsStream("service-account.json"));;
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(credentials)
                     .build();
