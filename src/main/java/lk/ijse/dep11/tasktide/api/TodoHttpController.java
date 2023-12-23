@@ -73,9 +73,8 @@ public class TodoHttpController {
         try {
             ApiFuture<QuerySnapshot> future = dbFirestore.collection("todos").whereEqualTo("id", todoId).whereEqualTo("email", todo.getEmail()).get();
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//
+
             if (!documents.isEmpty()) {
-//                dbFirestore.collection("todos").document(todo.getId()+"").set(todo);
                 DocumentReference updatedTodo = dbFirestore.collection("todos").document(todoId + "");
                 updatedTodo.update("description", todo.getDescription());
                 updatedTodo.update("status", todo.getStatus());
@@ -84,9 +83,6 @@ public class TodoHttpController {
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
             }
-
-
-
 
         } catch (Exception e) {
             throw new RuntimeException(e);
