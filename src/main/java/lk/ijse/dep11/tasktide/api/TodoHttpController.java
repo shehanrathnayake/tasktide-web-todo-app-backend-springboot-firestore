@@ -1,10 +1,7 @@
 package lk.ijse.dep11.tasktide.api;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import lk.ijse.dep11.tasktide.service.FirebaseService;
 import lk.ijse.dep11.tasktide.to.TodoTO;
@@ -76,12 +73,19 @@ public class TodoHttpController {
         try {
             ApiFuture<QuerySnapshot> future = dbFirestore.collection("todos").whereEqualTo("id", todoId).whereEqualTo("email", todo.getEmail()).get();
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-
+//
             if (!documents.isEmpty()) {
-                dbFirestore.collection("todos").document(String.valueOf(todo.getId())).set(todo);
+//                dbFirestore.collection("todos").document(todo.getId()+"").set(todo);
+                DocumentReference updatedTodo = dbFirestore.collection("todos").document(todoId + "");
+                updatedTodo.update("description", todo.getDescription());
+                updatedTodo.update("status", todo.getStatus());
+                updatedTodo.update("color", todo.getColor());
+
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
             }
+
+
 
 
         } catch (Exception e) {
@@ -96,7 +100,7 @@ public class TodoHttpController {
             ApiFuture<QuerySnapshot> future = dbFirestore.collection("todos").whereEqualTo("id", id).whereEqualTo("email", userEmail).get();
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();
             if (!documents.isEmpty()) {
-                dbFirestore.collection("todos").document(String.valueOf(id)).delete();
+                dbFirestore.collection("todos").document(id+"").delete();
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
             }
