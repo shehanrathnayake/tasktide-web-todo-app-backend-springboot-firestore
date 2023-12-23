@@ -24,7 +24,7 @@ public class TodoTO implements Serializable {
     @NotNull(message = "Status should not be empty", groups = Update.class)
     private Boolean status;
 
-    @NotNull(message = "Color should not be empty", groups = Update.class)
+    @NotNull(message = "Color should not be empty")
     private String color;
 
     @NotNull(message = "Email should not be empty")
