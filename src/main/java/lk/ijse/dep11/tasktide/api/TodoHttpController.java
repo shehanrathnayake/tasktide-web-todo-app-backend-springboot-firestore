@@ -30,6 +30,9 @@ public class TodoHttpController {
         dbFirestore = FirestoreClient.getFirestore();
     }
 
+    @Autowired
+    FirebaseService fbService;
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = "application/json", consumes = "application/json")
     public TodoTO createTodo(@RequestBody @Validated(TodoTO.Create.class) TodoTO todo) {
@@ -39,7 +42,6 @@ public class TodoHttpController {
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();
             int newId = 0;
             if (!documents.isEmpty()) {
-
                 String lastId = documents.get(0).getId();
                 newId = Integer.parseInt(lastId)+ 1;
             } else {
@@ -47,7 +49,6 @@ public class TodoHttpController {
             }
             todo.setId(newId);
             dbFirestore.collection("todos").document(String.valueOf(newId)).set(todo);
-
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -73,9 +74,6 @@ public class TodoHttpController {
     public void updateTodo(@PathVariable("id") int todoId,
                            @RequestBody @Validated(TodoTO.Update.class) TodoTO todo) {
         try {
-//            todo.setId(todoId);
-//            fbService.updateTodo(todo);
-
             ApiFuture<QuerySnapshot> future = dbFirestore.collection("todos").whereEqualTo("id", todoId).whereEqualTo("email", todo.getEmail()).get();
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();
 
